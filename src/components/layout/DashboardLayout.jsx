@@ -16,9 +16,9 @@ export default function DashboardLayout({ children }) {
   const SIDEBAR_WIDTH = isCollapsed ? "80px" : "240px";
 
   return (
-    <Box minH="100vh" bg="gray.50">
+    <Box minH="100vh" minW="100vw" bg="gray.50">
       {/* Desktop Sidebar */}
-      <Sidebar 
+      <Sidebar
         hideBelow="md" 
         width={SIDEBAR_WIDTH} 
         isCollapsed={isCollapsed}
