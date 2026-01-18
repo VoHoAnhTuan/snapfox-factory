@@ -1,31 +1,41 @@
-import { Box, Flex, Text, IconButton } from "@chakra-ui/react";
-import { FiX } from "react-icons/fi";
+import { Box, Flex, Text, IconButton, VStack } from "@chakra-ui/react";
+import { FiHome, FiSettings, FiChevronLeft, FiChevronRight, FiGrid } from "react-icons/fi";
 import NavItem from "./NavItem";
 
-// 1. Define the component
-const Sidebar = ({ onClose, ...rest }) => {
+const Sidebar = ({ isCollapsed, onToggle, ...rest }) => {
   return (
-    <Box
-      bg="white"
-      borderRight="1px solid"
-      borderColor="gray.200"
-      h="full"
+    <Box 
+      bg="white" 
+      borderRight="1px solid" 
+      borderColor="gray.200" 
+      h="full" 
+      overflow="hidden"
       {...rest}
     >
-      <Flex h="20" align="center" mx="8" justify="space-between">
-        <Text fontSize="2xl" fontWeight="bold" color="blue.600">Logo</Text>
-        {/* Only show close button on mobile */}
+      <Flex h="16" align="center" px={isCollapsed ? "0" : "6"} justify="center">
+        {/* Hide text when collapsed to save space */}
+        {!isCollapsed && (
+          <Text fontSize="xl" fontWeight="bold" color="blue.600" flex="1">
+            SnapFox
+          </Text>
+        )}
+        
         <IconButton 
-          display={{ base: "flex", md: "none" }} 
-          onClick={onClose} 
-          variant="ghost"
+          onClick={onToggle} 
+          variant="ghost" 
+          size="sm"
+          aria-label="Toggle Sidebar"
+          color="gray.500"
         >
-          <FiX />
+          {isCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
         </IconButton>
       </Flex>
       
-      {/* Navigation items go here */}
-      <NavItem icon={null}>Dashboard</NavItem>
+      <VStack gap="2" mt="4" px="2">
+        <NavItem icon={<FiHome />} isCollapsed={isCollapsed}>Dashboard</NavItem>
+        <NavItem icon={<FiGrid />} isCollapsed={isCollapsed}>Projects</NavItem>
+        <NavItem icon={<FiSettings />} isCollapsed={isCollapsed}>Settings</NavItem>
+      </VStack>
     </Box>
   );
 };

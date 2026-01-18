@@ -1,34 +1,35 @@
-import { Flex, Icon, Box } from '@chakra-ui/react';
+import { Flex, Box, Text } from "@chakra-ui/react";
 
-const NavItem = ({ icon, children, ...rest }) => {
+const NavItem = ({ icon, children, isCollapsed, ...rest }) => {
   return (
-    <Box
-      as="a"
-      href="#"
-      style={{ textDecoration: 'none' }}
-      _focus={{ boxShadow: 'none' }}
+    <Flex
+      align="center"
+      p="3"
+      borderRadius="md"
+      cursor="pointer"
+      color="gray.400"
+      _hover={{ bg: "gray.300", color: "#ff8c00" }}
+      justify={isCollapsed ? "center" : "flex-start"}
       width="full"
+      transition="all 0.2s"
+      {...rest}
     >
-      <Flex
-        align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
-        cursor="pointer"
-        _hover={{ bg: 'blue.500', color: 'white' }}
-        transition="background 0.2s"
-        {...rest}
+      <Box
+        fontSize="20"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
       >
-        {icon && (
-          <Box mr="4" fontSize="18">
-            {icon}
-          </Box>
-        )}
-        {children}
-      </Flex>
-    </Box>
+        {icon}
+      </Box>
+
+      {!isCollapsed && (
+        <Text ml="4" fontWeight="medium" fontSize="sm" whiteSpace="nowrap">
+          {children}
+        </Text>
+      )}
+    </Flex>
   );
 };
 
-// THIS IS THE MISSING PIECE
 export default NavItem;
