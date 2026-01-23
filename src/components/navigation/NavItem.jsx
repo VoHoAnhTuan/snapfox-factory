@@ -7,11 +7,12 @@ const NavItem = ({ icon, children, isCollapsed, ...rest }) => {
       p="3"
       borderRadius="md"
       cursor="pointer"
-      color="gray.400"
-      _hover={{ bg: "gray.300", color: "#ff8c00" }}
-      justify={isCollapsed ? "center" : "flex-start"}
       width="full"
       transition="all 0.2s"
+      color="gray.500"
+      // Parent controls the hover state
+      _hover={{ bg: "gray.100", color: "#ff8c00" }}
+      justify={isCollapsed ? "center" : "flex-start"}
       {...rest}
     >
       <Box

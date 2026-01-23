@@ -39,7 +39,7 @@ export default function DashboardLayout({ children }) {
         <DrawerContent>
           <DrawerBody p="0">
              {/* Mobile sidebar is never collapsed for usability */}
-             <Sidebar width="full" onSelect={() => setMobileOpen(false)} />
+             <Sidebar width="full" height="full" onSelect={() => setMobileOpen(false)} />
           </DrawerBody>
         </DrawerContent>
       </DrawerRoot>

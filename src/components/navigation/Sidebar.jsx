@@ -1,19 +1,32 @@
-import { Box, Flex, Text, IconButton, VStack } from "@chakra-ui/react";
-import { 
-  AccordionRoot, 
-  AccordionItem, 
-  AccordionItemTrigger, 
-  AccordionItemContent 
+import { Box, Flex, IconButton, VStack } from "@chakra-ui/react";
+import { useState } from "react";
+import {
+  AccordionRoot,
+  AccordionItem,
+  AccordionItemTrigger,
+  AccordionItemContent,
 } from "@/components/ui/accordion";
-import { FiHome, FiSettings, FiChevronLeft, FiChevronRight, FiGrid } from "react-icons/fi";
+import { Tooltip } from "@/components/ui/tooltip";
+import { 
+  FiHome, 
+  FiSettings, 
+  FiChevronLeft, 
+  FiChevronRight, 
+  FiGrid 
+} from "react-icons/fi";
 import NavItem from "./NavItem";
 
 const NavGroup = ({ item, isCollapsed }) => {
   const hasChildren = item.children && item.children.length > 0;
 
-  // If collapsed, just show the icon (Tooltip logic can be added here)
   if (isCollapsed) {
-    return <NavItem icon={item.icon} isCollapsed={true} />;
+    return (
+      <Tooltip content={item.label} placement="right" portalled>
+        <Box width="full">
+          <NavItem icon={item.icon} isCollapsed={true} />
+        </Box>
+      </Tooltip>
+    );
   }
 
   if (!hasChildren) {
@@ -21,20 +34,30 @@ const NavGroup = ({ item, isCollapsed }) => {
   }
 
   return (
-    <AccordionRoot collapsable variant="unstyled" width="full">
+    <AccordionRoot 
+      collapsible  // This MUST be present for "click to close"
+      variant="unstyled" 
+      width="full"
+      defaultValue={[]} // Ensures it starts in a clean state
+    >
       <AccordionItem value={item.label} border="none">
-        {/* We use the Trigger to wrap our NavItem style */}
-        <AccordionItemTrigger p="0" _hover={{ bg: "transparent" }}>
-          <NavItem icon={item.icon} isCollapsed={false} as="div">
+        {/* We move the NavItem style INSIDE the trigger to ensure the trigger captures the click */}
+        <AccordionItemTrigger p="0" width="full" _focus={{ boxShadow: "none" }}>
+          <NavItem 
+            icon={item.icon} 
+            isCollapsed={false} 
+            as="div" 
+            width="full"
+            pointerEvents="none" // Prevents the NavItem from blocking the Accordion click
+          >
             <Flex align="center" justify="space-between" width="full">
               {item.label}
-              {/* Accordion snippet usually handles the arrow automatically */}
             </Flex>
           </NavItem>
         </AccordionItemTrigger>
-        
-        <AccordionItemContent pb="2">
-          <VStack gap="1" ml="9" align="stretch">
+
+        <AccordionItemContent>
+          <VStack gap="1" ml="9" mt="1" align="stretch">
             {item.children.map((child) => (
               <NavItem key={child.label} isCollapsed={false} fontSize="xs" p="2">
                 {child.label}
@@ -46,3 +69,76 @@ const NavGroup = ({ item, isCollapsed }) => {
     </AccordionRoot>
   );
 };
+
+const Sidebar = ({ width = "240px", isCollapsed = false, onToggle, hideBelow, ...rest }) => {
+  const items = [
+    { label: "Home", icon: <FiHome /> },
+    { 
+      label: "Grid", 
+      icon: <FiGrid />, 
+      children: [{ label: "Subgrid A" }, { label: "Subgrid B" }] 
+    },
+    { label: "Settings", icon: <FiSettings /> },
+  ];
+
+  return (
+    <Box
+      as="aside"
+      bg="white"
+      borderRightWidth="1px"
+      borderRightColor="gray.100"
+      width={width}
+      minW={width}
+      display={{ base: hideBelow ? "none" : "block", md: "block" }}
+      p="4"
+      transition="width 0.2s ease"
+      {...rest}
+    >
+      <Flex direction="column" height="full">
+        {/* LOGO SECTION: Centered icon, no text */}
+        <Flex align="center" justify="center" mb="8">
+          <Box 
+            bg="#ff8c00" 
+            p="2" 
+            borderRadius="xl" 
+            color="white"
+            boxShadow="md"
+          >
+            <FiGrid size="24" />
+          </Box>
+        </Flex>
+
+        {/* NAVIGATION SECTION */}
+        <VStack align="stretch" gap="1">
+          {items.map((item) => (
+            <NavGroup key={item.label} item={item} isCollapsed={isCollapsed} />
+          ))}
+        </VStack>
+
+        {/* SPACER: Pushes the toggle button to the bottom */}
+        <Box flex="1" />
+
+        {/* TOGGLE SECTION: Anchored at the end */}
+        {onToggle && (
+          <Flex justify={isCollapsed ? "center" : "flex-end"} pt="4" borderTopWidth="1px" borderTopColor="gray.50">
+            <Tooltip content={isCollapsed ? "Expand" : "Collapse"} placement="right">
+              <IconButton
+                aria-label="toggle-sidebar"
+                size="md"
+                variant="ghost"
+                color="gray.400"
+                onClick={onToggle}
+                width="auto"
+                justifySelf="flex-end"
+              >
+                {isCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
+              </IconButton>
+            </Tooltip>
+          </Flex>
+        )}
+      </Flex>
+    </Box>
+  );
+};
+
+export default Sidebar;
