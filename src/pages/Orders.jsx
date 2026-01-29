@@ -1,65 +1,90 @@
-import { Heading, Box, Table, Badge, Text } from "@chakra-ui/react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Box, Table, Badge, Spinner, Center, Heading } from "@chakra-ui/react";
+import api from "../api/axios"; // Import your custom instance
 
 export default function Orders() {
-  // This is where your teammate will eventually fetch data from ASP.NET
-  const mockOrders = [
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-    { id: "1001", customer: "John Doe", status: "Completed", total: "$120.00" },
-    { id: "1002", customer: "Jane Smith", status: "Pending", total: "$45.50" },
-    { id: "1003", customer: "Bob Johnson", status: "Cancelled", total: "$0.00" },
-  ];
+  const [orders, setOrders] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const scrollParentRef = useRef(null);
+
+  // Use useCallback to keep the function stable
+  const fetchOrders = useCallback(async () => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    try {
+      // Axios uses 'params' to automatically build the query string: ?page=1&pageSize=50
+      const response = await api.get("/orders", {
+        params: {
+          page: page,
+          pageSize: 50,
+        },
+      });
+
+      const newItems = response.data.items;
+
+      if (newItems.length === 0) {
+        setHasMore(false);
+      } else {
+        setOrders((prev) => [...prev, ...newItems]);
+        setPage((prev) => prev + 1);
+      }
+    } catch (error) {
+      // Axios error handling is more robust
+      console.error("Error fetching orders:", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, loading, hasMore]);
+
+  // Handle scrolling logic
+  const handleScroll = () => {
+    if (!scrollParentRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollParentRef.current;
+    
+    if (scrollHeight - scrollTop <= clientHeight + 100) {
+      fetchOrders();
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   return (
-    <Box>
-      <Heading size="2xl" mb="6" color="gray.900">Orders</Heading>
+    <Box p="6">
+      <Heading mb="6">Order Management</Heading>
 
-
-      
-      <Box border="1px solid" borderColor="gray.200" borderRadius="lg" height="70vh" overflow="auto">
-        <Table.Root variant="line" size="md" color="gray.700" stickyHeader css={{ "& th": { bg: "blue.100", fontWeight: "bold", color: "gray.700" } }}>
-          <Table.Header>
+      <Box 
+        ref={scrollParentRef}
+        onScroll={handleScroll}
+        height="70vh" 
+        overflow="auto"
+        border="1px solid" 
+        borderColor="gray.200" 
+        borderRadius="lg"
+        bg="white"
+      >
+        <Table.Root variant="line" stickyHeader>
+          <Table.Header css={{ "& th": { bg: "gray.50", color: "gray.700" } }}>
             <Table.Row>
-              <Table.ColumnHeader >Order ID</Table.ColumnHeader>
-              <Table.ColumnHeader >Customer</Table.ColumnHeader>
-              <Table.ColumnHeader >Status</Table.ColumnHeader>
+              <Table.ColumnHeader>ID</Table.ColumnHeader>
+              <Table.ColumnHeader>Customer</Table.ColumnHeader>
+              <Table.ColumnHeader>Status</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="end">Total</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
+
           <Table.Body>
-            {mockOrders.map((order) => (
-              <Table.Row key={order.id} _hover={{ bg: "gray.50" }}>
-                <Table.Cell fontWeight="medium">{order.id}</Table.Cell>
+            {orders.map((order, index) => (
+              <Table.Row key={`${order.id}-${index}`} _hover={{ bg: "gray.50" }}>
+                <Table.Cell fontWeight="bold">{order.id}</Table.Cell>
                 <Table.Cell>{order.customer}</Table.Cell>
                 <Table.Cell>
-                  <Badge 
-                    colorPalette={order.status === "Completed" ? "green" : order.status === "Pending" ? "orange" : "red"}
-                  >
+                  <Badge colorPalette={order.status === "Completed" ? "green" : "orange"}>
                     {order.status}
                   </Badge>
                 </Table.Cell>
@@ -68,6 +93,12 @@ export default function Orders() {
             ))}
           </Table.Body>
         </Table.Root>
+
+        {loading && (
+          <Center p="10">
+            <Spinner size="xl" color="blue.500" />
+          </Center>
+        )}
       </Box>
     </Box>
   );
