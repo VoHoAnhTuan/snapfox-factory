@@ -1,8 +1,11 @@
 import { Flex, Box, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
-const NavItem = ({ icon, children, isCollapsed, ...rest }) => {
+const NavItem = ({ icon, children, to, isCollapsed, ...rest }) => {
   return (
     <Flex
+      as={to ? Link : "div"} //If 'to' exists, act as a Link; otherwise stay a div
+      to={to}
       align="center"
       p="3"
       borderRadius="md"

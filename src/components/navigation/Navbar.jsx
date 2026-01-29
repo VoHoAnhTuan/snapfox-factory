@@ -16,23 +16,18 @@ const Navbar = ({ onMenuClick }) => {
       <IconButton
         display={{ base: "flex", md: "none" }}
         onClick={onMenuClick}
-        variant="ghost"
+        variant="solid"
+        bg="transparent"
+        focusRing="none"
+        border="none"
         aria-label="open menu"
       >
         <FiMenu />
       </IconButton>
 
-      <Text
-        display={{ base: "flex", md: "none" }}
-        fontSize="2xl"
-        fontWeight="bold"
-      >
-        Logo
-      </Text>
-
       {/* Right side items (Notifications, Profile) */}
       <HStack gap="4">
-        <IconButton variant="ghost" aria-label="notifications">
+        <IconButton variant="ghost" bg="transparent" border="none" focusRing="none" aria-label="notifications">
           <FiBell />
         </IconButton>
         <Box 

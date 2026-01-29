@@ -9,7 +9,10 @@ import {
   DrawerBackdrop 
 } from "@/components/ui/drawer";
 
-export default function DashboardLayout({ children }) {
+// 1. Import Outlet
+import { Outlet } from "react-router-dom";
+
+export default function DashboardLayout() { // No longer need { children }
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -25,7 +28,7 @@ export default function DashboardLayout({ children }) {
         onToggle={() => setIsCollapsed(!isCollapsed)}
         position="fixed"
         h="full"
-        transition="width 0.2s ease" // Smooth animation
+        transition="width 0.2s ease"
         zIndex="sticky"
       />
 
@@ -38,7 +41,6 @@ export default function DashboardLayout({ children }) {
         <DrawerBackdrop />
         <DrawerContent>
           <DrawerBody p="0">
-             {/* Mobile sidebar is never collapsed for usability */}
              <Sidebar width="full" height="full" onSelect={() => setMobileOpen(false)} />
           </DrawerBody>
         </DrawerContent>
@@ -49,10 +51,13 @@ export default function DashboardLayout({ children }) {
         gap="0" 
         ml={{ base: 0, md: SIDEBAR_WIDTH }} 
         transition="margin-left 0.2s ease"
+        minH="100vh"
       >
         <Navbar onMenuClick={() => setMobileOpen(true)} />
-        <Box as="main" p="6">
-          {children}
+        
+        {/* 2. Update this Box to use Outlet */}
+        <Box as="main" p="6" flex="1">
+          <Outlet /> 
         </Box>
       </Stack>
     </Box>

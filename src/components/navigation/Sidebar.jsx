@@ -1,5 +1,5 @@
 import { Box, Flex, IconButton, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+
 import {
   AccordionRoot,
   AccordionItem,
@@ -7,14 +7,15 @@ import {
   AccordionItemContent,
 } from "@/components/ui/accordion";
 import { Tooltip } from "@/components/ui/tooltip";
-import { 
-  FiHome, 
-  FiSettings, 
-  FiChevronLeft, 
-  FiChevronRight, 
-  FiGrid 
+import {
+  FiHome,
+  FiSettings,
+  FiChevronLeft,
+  FiChevronRight,
+  FiGrid,
 } from "react-icons/fi";
 import NavItem from "./NavItem";
+import logoSvg from "../../assets/react.svg";
 
 const NavGroup = ({ item, isCollapsed }) => {
   const hasChildren = item.children && item.children.length > 0;
@@ -23,30 +24,34 @@ const NavGroup = ({ item, isCollapsed }) => {
     return (
       <Tooltip content={item.label} placement="right" portalled>
         <Box width="full">
-          <NavItem icon={item.icon} isCollapsed={true} />
+          <NavItem icon={item.icon} isCollapsed={true} to={item.to}/>
         </Box>
       </Tooltip>
     );
   }
 
   if (!hasChildren) {
-    return <NavItem icon={item.icon} isCollapsed={false}>{item.label}</NavItem>;
+    return (
+      <NavItem icon={item.icon} isCollapsed={false} to={item.to}>
+        {item.label}
+      </NavItem>
+    );
   }
 
   return (
-    <AccordionRoot 
-      collapsible  // This MUST be present for "click to close"
-      variant="unstyled" 
+    <AccordionRoot
+      collapsible // click to close
+      variant="unstyled"
       width="full"
       defaultValue={[]} // Ensures it starts in a clean state
     >
-      <AccordionItem value={item.label} border="none">
+      <AccordionItem value={item.label} border="none" bg="transparent">
         {/* We move the NavItem style INSIDE the trigger to ensure the trigger captures the click */}
         <AccordionItemTrigger p="0" width="full" _focus={{ boxShadow: "none" }}>
-          <NavItem 
-            icon={item.icon} 
-            isCollapsed={false} 
-            as="div" 
+          <NavItem
+            icon={item.icon}
+            isCollapsed={false}
+            as="div"
             width="full"
             pointerEvents="none" // Prevents the NavItem from blocking the Accordion click
           >
@@ -59,7 +64,12 @@ const NavGroup = ({ item, isCollapsed }) => {
         <AccordionItemContent>
           <VStack gap="1" ml="9" mt="1" align="stretch">
             {item.children.map((child) => (
-              <NavItem key={child.label} isCollapsed={false} fontSize="xs" p="2">
+              <NavItem
+                key={child.label}
+                isCollapsed={false}
+                fontSize="xs"
+                p="2"
+              >
                 {child.label}
               </NavItem>
             ))}
@@ -70,15 +80,22 @@ const NavGroup = ({ item, isCollapsed }) => {
   );
 };
 
-const Sidebar = ({ width = "240px", isCollapsed = false, onToggle, hideBelow, ...rest }) => {
+const Sidebar = ({
+  width = "240px",
+  isCollapsed = false,
+  onToggle,
+  hideBelow,
+  ...rest
+}) => {
   const items = [
-    { label: "Home", icon: <FiHome /> },
-    { 
-      label: "Grid", 
-      icon: <FiGrid />, 
-      children: [{ label: "Subgrid A" }, { label: "Subgrid B" }] 
+    { label: "Home", icon: <FiHome />, to: "/home" },
+    {
+      label: "Order",
+      icon: <FiGrid />, to: "/orders",
+      // children: [{ label: "Subgrid A" }, { label: "Subgrid B" }],
     },
-    { label: "Settings", icon: <FiSettings /> },
+    { label: "Settings", icon: <FiSettings />, to: "/settings", children: [{ label: "Subgrid A" }, { label: "Subgrid B" }]},
+    
   ];
 
   return (
@@ -97,15 +114,7 @@ const Sidebar = ({ width = "240px", isCollapsed = false, onToggle, hideBelow, ..
       <Flex direction="column" height="full">
         {/* LOGO SECTION: Centered icon, no text */}
         <Flex align="center" justify="center" mb="8">
-          <Box 
-            bg="#ff8c00" 
-            p="2" 
-            borderRadius="xl" 
-            color="white"
-            boxShadow="md"
-          >
-            <FiGrid size="24" />
-          </Box>
+          <Box as="img" src={logoSvg} alt="Logo" w="24px" h="24px" />
         </Flex>
 
         {/* NAVIGATION SECTION */}
@@ -120,12 +129,22 @@ const Sidebar = ({ width = "240px", isCollapsed = false, onToggle, hideBelow, ..
 
         {/* TOGGLE SECTION: Anchored at the end */}
         {onToggle && (
-          <Flex justify={isCollapsed ? "center" : "flex-end"} pt="4" borderTopWidth="1px" borderTopColor="gray.50">
-            <Tooltip content={isCollapsed ? "Expand" : "Collapse"} placement="right">
+          <Flex
+            justify={isCollapsed ? "center" : "flex-end"}
+            pt="4"
+            borderTopWidth="1px"
+            borderTopColor="gray.50"
+          >
+            <Tooltip
+              content={isCollapsed ? "Expand" : "Collapse"}
+              placement="right"
+            >
               <IconButton
                 aria-label="toggle-sidebar"
                 size="md"
                 variant="ghost"
+                bg="none"
+                focusRing="none"
                 color="gray.400"
                 onClick={onToggle}
                 width="auto"
