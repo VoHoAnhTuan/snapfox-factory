@@ -1,5 +1,6 @@
 import { Flex, IconButton, Text, HStack, Box } from "@chakra-ui/react";
 import { FiMenu, FiBell, FiUser } from "react-icons/fi";
+import ColorModeToggle from "../ColorModeToggle";
 
 const Navbar = ({ onMenuClick }) => {
   return (
@@ -7,9 +8,9 @@ const Navbar = ({ onMenuClick }) => {
       px="4"
       height="16"
       alignItems="center"
-      bg="white"
+      bg="bg.panel"
       borderBottomWidth="1px"
-      borderBottomColor="gray.200"
+      borderBottomColor="border"
       justifyContent={{ base: "space-between", md: "flex-end" }}
     >
       {/* Hamburger Menu - Only visible on mobile */}
@@ -17,7 +18,7 @@ const Navbar = ({ onMenuClick }) => {
         display={{ base: "flex", md: "none" }}
         onClick={onMenuClick}
         variant="solid"
-        bg="transparent"
+        bg="bg.panel"
         focusRing="none"
         border="none"
         aria-label="open menu"
@@ -25,16 +26,19 @@ const Navbar = ({ onMenuClick }) => {
         <FiMenu />
       </IconButton>
 
+      <ColorModeToggle />
+
       {/* Right side items (Notifications, Profile) */}
       <HStack gap="4">
-        <IconButton variant="ghost" bg="transparent" border="none" focusRing="none" aria-label="notifications">
+        <IconButton variant="ghost" bg="bg.panel" _hover={{color: "#ff8c00"}} border="none" focusRing="none" aria-label="notifications">
           <FiBell />
         </IconButton>
+
         <Box 
             p="2" 
             borderRadius="full" 
-            bg="blue.50" 
-            color="blue.600"
+            bg="gray.400" 
+            color="white.400"
             cursor="pointer"
         >
           <FiUser size="20" />

@@ -24,7 +24,7 @@ const NavGroup = ({ item, isCollapsed }) => {
     return (
       <Tooltip content={item.label} placement="right" portalled>
         <Box width="full">
-          <NavItem icon={item.icon} isCollapsed={true} to={item.to}/>
+          <NavItem icon={item.icon} isCollapsed={true} to={item.to} />
         </Box>
       </Tooltip>
     );
@@ -55,9 +55,7 @@ const NavGroup = ({ item, isCollapsed }) => {
             width="full"
             pointerEvents="none" // Prevents the NavItem from blocking the Accordion click
           >
-            <Flex align="center" justify="space-between" width="full">
-              {item.label}
-            </Flex>
+            {item.label}
           </NavItem>
         </AccordionItemTrigger>
 
@@ -91,19 +89,23 @@ const Sidebar = ({
     { label: "Home", icon: <FiHome />, to: "/home" },
     {
       label: "Order",
-      icon: <FiGrid />, to: "/orders",
-      // children: [{ label: "Subgrid A" }, { label: "Subgrid B" }],
+      icon: <FiGrid />,
+      to: "/orders",
     },
-    { label: "Settings", icon: <FiSettings />, to: "/settings", children: [{ label: "Subgrid A" }, { label: "Subgrid B" }]},
-    
+    {
+      label: "Settings",
+      icon: <FiSettings />,
+      to: "/settings",
+      children: [{ label: "Subgrid A" }, { label: "Subgrid B" }],
+    },
   ];
 
   return (
     <Box
       as="aside"
-      bg="white"
+      bg="bg.panel"
       borderRightWidth="1px"
-      borderRightColor="gray.100"
+      borderRightColor="border"
       width={width}
       minW={width}
       display={{ base: hideBelow ? "none" : "block", md: "block" }}
@@ -133,7 +135,7 @@ const Sidebar = ({
             justify={isCollapsed ? "center" : "flex-end"}
             pt="4"
             borderTopWidth="1px"
-            borderTopColor="gray.50"
+            borderTopColor="border"
           >
             <Tooltip
               content={isCollapsed ? "Expand" : "Collapse"}
@@ -143,8 +145,9 @@ const Sidebar = ({
                 aria-label="toggle-sidebar"
                 size="md"
                 variant="ghost"
-                bg="none"
+                bg="bg.panel"
                 focusRing="none"
+                _hover={{ bg: "bg.panel", color: "#ff8c00", borderColor: "#ff8c00" }}
                 color="gray.400"
                 onClick={onToggle}
                 width="auto"

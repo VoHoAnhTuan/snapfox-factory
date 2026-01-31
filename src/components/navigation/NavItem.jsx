@@ -14,7 +14,7 @@ const NavItem = ({ icon, children, to, isCollapsed, ...rest }) => {
       transition="all 0.2s"
       color="gray.500"
       // Parent controls the hover state
-      _hover={{ bg: "gray.100", color: "#ff8c00" }}
+      _hover={{ bg: "bg.panel", color: "#ff8c00" }}
       justify={isCollapsed ? "center" : "flex-start"}
       {...rest}
     >

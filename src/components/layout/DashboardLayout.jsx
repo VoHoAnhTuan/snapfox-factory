@@ -9,17 +9,17 @@ import {
   DrawerBackdrop 
 } from "@/components/ui/drawer";
 
-// 1. Import Outlet
 import { Outlet } from "react-router-dom";
 
-export default function DashboardLayout() { // No longer need { children }
+export default function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  
 
   const SIDEBAR_WIDTH = isCollapsed ? "80px" : "240px";
 
   return (
-    <Box minH="100vh" minW="100vw" bg="gray.50">
+    <Box minH="100vh" minW="100vw" bg="bg.panel">
       {/* Desktop Sidebar */}
       <Sidebar
         hideBelow="md" 

@@ -6,8 +6,7 @@ export const login = async (username, password) => {
     password,
   });
 
-  // Most APIs return the token as 'token' or 'accessToken'
-  const token = response.data.token; 
+  const token = response.data.token || response.data.accessToken;; 
   
   if (token) {
     // Save it so the Axios interceptor can find it

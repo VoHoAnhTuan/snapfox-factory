@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Box, Table, Badge, Spinner, Center, Heading } from "@chakra-ui/react";
-import api from "../api/axios"; // Import your custom instance
+import api from "../api/axios";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -66,10 +66,10 @@ export default function Orders() {
         border="1px solid" 
         borderColor="gray.200" 
         borderRadius="lg"
-        bg="white"
+        bg="bg.panel"
       >
         <Table.Root variant="line" stickyHeader>
-          <Table.Header css={{ "& th": { bg: "gray.50", color: "gray.700" } }}>
+          <Table.Header css={{ "& th": { bg: "bg.panel", color: "fg" } }}>
             <Table.Row>
               <Table.ColumnHeader>ID</Table.ColumnHeader>
               <Table.ColumnHeader>Customer</Table.ColumnHeader>
@@ -80,7 +80,7 @@ export default function Orders() {
 
           <Table.Body>
             {orders.map((order, index) => (
-              <Table.Row key={`${order.id}-${index}`} _hover={{ bg: "gray.50" }}>
+              <Table.Row key={`${order.id}-${index}`} _hover={{ bg: "bg.panel" }}>
                 <Table.Cell fontWeight="bold">{order.id}</Table.Cell>
                 <Table.Cell>{order.customer}</Table.Cell>
                 <Table.Cell>
