@@ -15,7 +15,7 @@ import {
   FiGrid,
 } from "react-icons/fi";
 import NavItem from "./NavItem";
-import logoSvg from "../../assets/react.svg";
+import logoSvg from "../../assets/snapfox-logo.svg";
 
 const NavGroup = ({ item, isCollapsed }) => {
   const hasChildren = item.children && item.children.length > 0;
