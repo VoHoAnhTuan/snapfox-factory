@@ -11,6 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { LuRefreshCw } from "react-icons/lu";
 import api from "../api/axios";
 
 export default function Orders() {
@@ -23,9 +24,9 @@ export default function Orders() {
   const fetchOrders = async (currentPage) => {
     setLoading(true);
     try {
-      const response = await api.get("/orders", {
+      const response = await api.get("/order/get-all", {
         params: {
-          page: currentPage,
+          p: currentPage,
           pageSize: pageSize,
         },
       });
@@ -58,11 +59,25 @@ export default function Orders() {
 
   return (
     <Box p="6">
-      <Heading mb="6">Order Management</Heading>
+      <HStack color="fg" justify="space-between" mb="4">
+        <Heading  mb="6">Order Management</Heading>
+        <Button
+          variant="ghost"
+          size="xs"
+          border="none"
+          bg="bg.panel"
+          _hover={{bgColor: "#ff8c00"}}
+          onClick={() => fetchOrders(page)}
+          disabled={loading}
+          loading={loading}
+        >
+          <LuRefreshCw /> Refresh
+        </Button>
+      </HStack>
 
       <Box
         border="1px solid"
-        borderColor="border" // Use theme token instead of gray.200
+        borderColor="border"
         borderRadius="lg"
         bg="bg.panel"
         overflow="hidden"
@@ -79,14 +94,27 @@ export default function Orders() {
 
           <Table.Body>
             {loading ? (
+              /* 1. Show Spinner while fetching */
               <Table.Row>
                 <Table.Cell colSpan={4}>
                   <Center p="10">
-                    <Spinner />
+                    <Spinner color="orange.500" />
+                  </Center>
+                </Table.Cell>
+              </Table.Row>
+            ) : orders.length === 0 ? (
+              /* 2. Show "No order found" if API returns [] */
+              <Table.Row>
+                <Table.Cell colSpan={4}>
+                  <Center p="10">
+                    <Text color="fg.muted" fontWeight="medium">
+                      No order found
+                    </Text>
                   </Center>
                 </Table.Cell>
               </Table.Row>
             ) : (
+              /* 3. Show actual data if items exist */
               orders.map((order) => (
                 <Table.Row key={order.id} _hover={{ bg: "bg.muted" }}>
                   <Table.Cell fontWeight="bold">{order.id}</Table.Cell>
