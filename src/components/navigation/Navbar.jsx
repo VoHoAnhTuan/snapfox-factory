@@ -10,7 +10,7 @@ import {
   MenuItem,
   MenuSeparator,
 } from "@/components/ui/menu";
-import { LuLogOut, LuUser, LuSettings } from "react-icons/lu";
+import { LuLogOut, LuUser } from "react-icons/lu";
 
 
 const Navbar = ({ onMenuClick }) => {
