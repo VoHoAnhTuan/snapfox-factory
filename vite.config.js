@@ -9,4 +9,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://factory.snapfox.us',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 })

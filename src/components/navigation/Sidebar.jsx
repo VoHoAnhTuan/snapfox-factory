@@ -13,6 +13,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiGrid,
+  FiShoppingCart,
 } from "react-icons/fi";
 import NavItem from "./NavItem";
 import logoSvg from "../../assets/snapfox-logo.svg";
@@ -89,7 +90,7 @@ const Sidebar = ({
     { label: "Home", icon: <FiHome />, to: "/home" },
     {
       label: "Order",
-      icon: <FiGrid />,
+      icon: <FiShoppingCart />,
       to: "/orders",
     },
     {

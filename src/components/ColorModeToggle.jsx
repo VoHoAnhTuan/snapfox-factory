@@ -13,7 +13,7 @@ export default function ColorModeToggle() {
       bg="bg.panel"
       focusRing="none"
       border="none"
-      _hover={{color: "#ff8c00"}}
+      _hover={{color: "#ff8c00", bg: "bg.muted"}}
     >
       {colorMode === "light" ? <LuMoon /> : <LuSun />}
     </IconButton>

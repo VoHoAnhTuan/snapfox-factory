@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { Box, Text, HStack, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
@@ -20,7 +20,7 @@ const MOCK_ORDERS = [
   { createdDate: "2025-11-15T10:30:00Z", totalAmount: 2800 },
 ];
 
-export const RevenueChart = ({ orders = MOCK_ORDERS, timeframe = "Month" }) => {
+export const OrderChart = ({ orders = MOCK_ORDERS, timeframe = "Month" }) => {
   const chartData = useMemo(() => {
     const dataMap = {};
 
@@ -31,33 +31,27 @@ export const RevenueChart = ({ orders = MOCK_ORDERS, timeframe = "Month" }) => {
 
       if (timeframe === "Date") {
         label = date.toLocaleDateString("en-US", { weekday: "short" });
-        sortValue = date.getDay(); // 0-6
+        sortValue = date.getDay();
       } else if (timeframe === "Week") {
         label = date.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
         });
-        sortValue = date.getTime(); // Use timestamp for exact chronological order
+        sortValue = date.getTime();
       } else {
         label = date.toLocaleDateString("en-US", { month: "short" });
-        sortValue = date.getMonth(); // 0-11
+        sortValue = date.getMonth();
       }
 
       if (!dataMap[label]) {
-        dataMap[label] = { name: label, revenue: 0, sortValue };
+        // Logic change: tracking orderCount instead of revenue
+        dataMap[label] = { name: label, orderCount: 0, sortValue };
       }
-      dataMap[label].revenue += order.totalAmount;
+      dataMap[label].orderCount += 1; // Increment count for each order
     });
 
     return Object.values(dataMap).sort((a, b) => a.sortValue - b.sortValue);
   }, [orders, timeframe]);
-
-  const formatCurrency = (value) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    }).format(value);
 
   return (
     <Box
@@ -71,24 +65,18 @@ export const RevenueChart = ({ orders = MOCK_ORDERS, timeframe = "Month" }) => {
     >
       <VStack align="start" gap="0" mb="4">
         <Text fontWeight="bold" fontSize="lg">
-          Revenue Analysis
+          Order Volume
         </Text>
         <Text fontSize="xs" color="fg.muted">
-          Showing revenue by {timeframe.toLowerCase()}
+          Showing total orders by {timeframe.toLowerCase()}
         </Text>
       </VStack>
 
       <Box height="300px" width="100%">
-        {/* Added minWidth and minHeight to prevent the -1 width error */}
-        <ResponsiveContainer
-          width="100%"
-          height="100%"
-          minWidth={0}
-          minHeight={0}
-        >
-          <LineChart
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+          <BarChart
             data={chartData}
-            margin={{ top: 10, right: 20, left: 10, bottom: 0 }}
+            margin={{ top: 10, right: 20, left: -20, bottom: 0 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"
@@ -100,34 +88,32 @@ export const RevenueChart = ({ orders = MOCK_ORDERS, timeframe = "Month" }) => {
               axisLine={false}
               tickLine={false}
               tick={{ fill: "gray", fontSize: 12 }}
-              padding={{ left: 20, right: 20 }}
               dy={10}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
               tick={{ fill: "gray", fontSize: 12 }}
-              tickFormatter={formatCurrency}
+              allowDecimals={false} // Orders are whole units
             />
             <Tooltip
+              cursor={{ fill: "rgba(255, 140, 0, 0.05)" }}
               contentStyle={{
                 borderRadius: "12px",
                 border: "none",
-                backgroundColor: "#1A1A1A", // Darker background for contrast
+                backgroundColor: "#1A1A1A",
                 color: "#fff",
               }}
               itemStyle={{ color: "#fff" }}
-              formatter={(val) => [formatCurrency(val), "Revenue"]}
+              formatter={(val) => [val, "Orders"]}
             />
-            <Line
-              type="monotone" // Creates a smooth curve
-              dataKey="revenue"
-              stroke="#ff8c00"
-              strokeWidth={3}
-              dot={{ r: 4, fill: "#ff8c00", strokeWidth: 2, stroke: "#fff" }}
-              activeDot={{ r: 6, strokeWidth: 0 }}
+            <Bar
+              dataKey="orderCount"
+              fill="#ff8c00" // Keeping consistent theme color
+              radius={[4, 4, 0, 0]} // Rounded top corners for a modern look
+              barSize={40}
             />
-          </LineChart>
+          </BarChart>
         </ResponsiveContainer>
       </Box>
     </Box>

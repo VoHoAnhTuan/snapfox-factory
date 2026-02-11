@@ -1,6 +1,7 @@
 import { Flex, IconButton, Text, HStack, Box, VStack } from "@chakra-ui/react";
-import { FiMenu, FiBell, FiUser } from "react-icons/fi";
+import { FiMenu, FiBell } from "react-icons/fi";
 import ColorModeToggle from "../ColorModeToggle";
+import { FullscreenToggle } from "../FullscreenToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar } from "@/components/ui/avatar";
 import {
@@ -11,7 +12,6 @@ import {
   MenuSeparator,
 } from "@/components/ui/menu";
 import { LuLogOut, LuUser } from "react-icons/lu";
-
 
 const Navbar = ({ onMenuClick }) => {
   const { name, title } = useAuth();
@@ -43,12 +43,16 @@ const Navbar = ({ onMenuClick }) => {
       >
         <FiMenu />
       </IconButton>
+
+      <FullscreenToggle />
+
       <ColorModeToggle />
+
       <IconButton
         mr="2"
         variant="ghost"
         bg="bg.panel"
-        _hover={{ color: "#ff8c00" }}
+        _hover={{ color: "#ff8c00", bg: "bg.muted"}}
         border="none"
         focusRing="none"
         aria-label="notifications"

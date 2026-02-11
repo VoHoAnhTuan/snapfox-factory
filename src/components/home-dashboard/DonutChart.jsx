@@ -45,7 +45,7 @@ export const DonutChart = ({ data }) => {
       <Text fontWeight="bold" fontSize="lg">
         Top 5 Partners
       </Text>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <PieChart>
           <Tooltip
             contentStyle={{
